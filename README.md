@@ -1,2 +1,9 @@
 # HeightGrower
-## به به به به
+## Install the packages
+bash`
+npm install
+`
+## Run
+bash`
+npm start
+`
