@@ -1,0 +1,41 @@
+{
+  "name": "heightgrower",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/main.ts",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node src/main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node src/main.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@types/pg": "^8.20.0",
+    "pg": "^8.22.0",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}
