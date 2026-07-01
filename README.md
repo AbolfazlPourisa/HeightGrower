@@ -49,6 +49,7 @@ npm install
 
 ### 3️⃣ Configure environment variables
 - Create a .env file in the root directory
+
 .env```
 DB_HOST=localhost
 DB_PORT=5432
