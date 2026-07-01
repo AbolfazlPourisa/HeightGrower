@@ -1,7 +1,8 @@
 import { UserInfo } from "../user/user";
 
-export interface Database {
-    checkUserExsits(
+export interface Database 
+{
+    checkUserExists(
         user: UserInfo
     ): Promise<boolean>;
 

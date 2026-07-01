@@ -32,10 +32,12 @@
   "type": "module",
   "dependencies": {
     "@types/pg": "^8.20.0",
+    "dotenv": "^17.4.2",
     "pg": "^8.22.0",
     "telegraf": "^4.16.3"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "typescript": "^6.0.3"
   }
 }

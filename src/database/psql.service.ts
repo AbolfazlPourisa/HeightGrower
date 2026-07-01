@@ -1,8 +1,12 @@
 import { Database } from "./database";
 import { UserInfo } from "../user/user";
+import { Log } from "../log/log";
 import { Pool } from "pg";
 
-export class PsqlDB implements Database {
+const ThisModulePath = "./src/database/psql.service.ts";
+
+export class PsqlDB implements Database 
+{
     private pool: Pool;
 
     constructor(
@@ -10,21 +14,42 @@ export class PsqlDB implements Database {
         port: number,
         database: string,
         user: string,
-        password: string
-    ) {
+        password: string,
+        maxConnections: number = 30,
+        idleTimeoutMillis: number = 30000
+    ) 
+    {
         this.pool = new Pool({
             host,
             port,
             database,
             user,
-            password
+            password,
+            max: maxConnections,
+            idleTimeoutMillis: idleTimeoutMillis
         });
+
+        Log.log(
+            `Database pool initialized with 
+                host: ${host} 
+                port: ${port}
+                database: ${database}
+                user: ${user}
+                password: ***
+                max: ${maxConnections}
+                idleTimeoutMillis: ${idleTimeoutMillis}ms
+            properties
+            log from ${ThisModulePath}`,
+            false
+        );
     }
 
-    public async checkUserExsits(
+    public async checkUserExists(
         user: UserInfo
-    ): Promise<boolean> {
-        try {
+    ): Promise<boolean> 
+    {
+        try 
+        {
             const isUserExists = await this.pool.query(
                 `SELECT EXISTS(
                     SELECT 1 FROM users WHERE id = $1
@@ -34,35 +59,53 @@ export class PsqlDB implements Database {
                 ]
             );
 
+            Log.log(
+                `checkUserExists method executed successfully, log from ${ThisModulePath}`,
+                false
+            );
+
             return isUserExists.rows[0].exists;     
         } catch(
             error
-        ) {
-            console.error(
-                "Unable to checkUserExsits"
+        )
+        {
+            Log.log(
+                `Unable to executed checkUserExists method, log from ${ThisModulePath}`,
+                true
             );
+
             throw error;
         }
     }
 
-    public async connect(): Promise<void> {
-        try {
+    public async connect(): Promise<void> 
+    {
+        try 
+        {
             await this.pool.connect();
-            console.log(
-                "Connected to database successfuly"
+            
+            Log.log(
+                `Connected to database successfully, log from ${ThisModulePath}`,
+                false
             );
+
         } catch (
             error
-        ) {
-            console.error(
-                "Unable to connect database"
+        ) 
+        {
+            Log.log(
+                `Unable to connect database, log from ${ThisModulePath}`,
+                true
             );
+
             throw error;
         }
     }
 
-    public async createTables(): Promise<void> {
-        const queries = [
+    public async createTables(): Promise<void> 
+    {
+        const queries = 
+        [
             `CREATE TABLE IF NOT EXISTS users (
                 id TEXT UNIQUE PRIMARY KEY,
                 username VARCHAR(255),
@@ -90,15 +133,25 @@ export class PsqlDB implements Database {
             )`
         ];
 
-        for (const [query, index] of queries) {
+        for (let i = 0; i < queries.length; i++) 
+        {
+            const query = queries[i];
+
             try {
                 await this.pool.query(query);
+                
+                Log.log(
+                    `Query table number ${i + 1} executed successfully, log from ${ThisModulePath}`,
+                    false
+                );
             } catch (
                 error
             ) {
-                console.error(
-                    `An error while executing table query number ${index + 1}`
+                Log.log(
+                    `Unable to executed table query number ${i + 1}, log from ${ThisModulePath}`,
+                    true
                 );
+
                 throw error;
             }
         }
@@ -106,14 +159,37 @@ export class PsqlDB implements Database {
 
     public async addUser(
         user: UserInfo
-    ) {
-        if (
-            await this.checkUserExsits(
+    ) 
+    {
+        try 
+        {
+            const isUserExists = await this.checkUserExists(
                 user
-            )
-        ) return;
+            
+            );
 
-        try {
+            Log.log(
+                `checkUserExists executed successfully from addUser, log from ${ThisModulePath}`,
+                false
+            );
+
+            if (
+                isUserExists
+            ) return;
+        } catch(
+            error
+        )
+        {
+            Log.log(
+                `Unable to addUser because checkUserExists failed, log from ${ThisModulePath}`,
+                true
+            );
+
+            throw error;
+        }
+
+        try 
+        {
             await this.pool.query(
                 `INSERT INTO users (
                     id,
@@ -131,12 +207,20 @@ export class PsqlDB implements Database {
                     user.name || null
                 ]
             );
+
+            Log.log(
+                `addUser executed successfully, log from ${ThisModulePath}`,
+                false
+            );
         } catch (
             error
-        ) {
-            console.error(
-                "Unable to addUser"
+        ) 
+        {
+            Log.log(
+                `Unable to addUser, log from ${ThisModulePath}`,
+                true
             );
+
             throw error;
         }
     }
@@ -144,24 +228,42 @@ export class PsqlDB implements Database {
     public async createBet(
         starter: UserInfo,
         amount: string
-    ): Promise<void> {
+    ): Promise<void> 
+    {
         const amountNumber = Number(
             amount
         );
 
-        this.pool.query(
-            `INSERT INTO bets (
-                starter,
-                accepter,
-                amount
-            ) VALUES (
-                $1,
-                $2,
-                $3 
-            )`,
-            [
-                
-            ]
-        );
+        try 
+        {
+            await this.pool.query(
+                `INSERT INTO bets (
+                    starter,
+                    amount
+                ) VALUES (
+                    $1,
+                    $2
+                )`,
+                [
+                    starter.id,
+                    amountNumber
+                ]
+            );
+            
+            Log.log(
+                `createBet executed successfully, log from ${ThisModulePath}`,
+                false
+            );
+        } catch (
+            error
+        ) 
+        {
+            Log.log(
+                `Unable to createBet, log from ${ThisModulePath}`,
+                true
+            );
+
+            throw error;
+        }
     }
 }
