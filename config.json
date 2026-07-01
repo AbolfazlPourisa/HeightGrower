@@ -1,0 +1,69 @@
+{
+    "languages": {
+        "en": "English🇺🇸🇬🇧",
+        "fa": "Persian🇮🇷",
+        "ru": "Russian🇷🇺"
+    },
+
+    "message": {
+        "en": {},
+        
+        "fa": {},
+        
+        "ru": {}
+    },
+
+    "features": {
+        "leaderboard": {
+            "activity": {
+                "active": true,
+                "inactiveMessage": true,
+                "messageKey": "inactiveLeaderboard"
+            },
+            "maxPlayersPerPage": 10,
+            "sortBy": "height",
+            "order": "DESC"
+        },
+
+        "growth": {
+            "activity": {
+                "active": true,
+                "inactiveMessage": true,
+                "messageKey": "inactiveGrowth"
+            },
+            "periodMinutes": 1440,
+            "range": {
+                "max": 25,
+                "min": -5
+            }
+        },
+        
+        "bet": {
+            "activity": {
+                "active": true,
+                "inactiveMessage": true,
+                "messageKey": "inactiveBet"
+            },
+            "cancelable": true,
+            "range": {
+                "max": 100000,
+                "min": 1
+            }
+        },
+
+        "referral": {
+            "activity": {
+                "active": true,
+                "inactiveMessage": true,
+                "messageKey": "inactiveReferral"
+            },
+            "reward": 100
+        }
+    },
+    
+    "bot": {
+        "multiLanguage": true,
+        "defaultLanguage": "en",
+        "timezone": "UTC"
+    }
+}
