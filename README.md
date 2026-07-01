@@ -60,7 +60,6 @@ BOT_TOKEN=your_telegram_bot_token
 
 LOG_LEVEL=2  # 0=NONE, 1=ERROR, 2=INFO
 ```
-
 ## Usage
 bash```
 npm start
